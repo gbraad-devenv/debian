@@ -2,6 +2,8 @@ image:
   file: /gitpod/Dockerfile
 
 tasks:
+  - init: >
+      ./gitpod/install.sh
   - name: dotfiles
     command: |
       if [ ! -d "~/.dotfiles" ]; then
