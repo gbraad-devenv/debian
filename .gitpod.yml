@@ -2,12 +2,6 @@ image:
   file: /gitpod/Dockerfile
 
 tasks:
-  - init: |
-      curl -fsSL https://pkgs.tailscale.com/stable/debian/bullseye.noarmor.gpg | sudo tee /usr/share/keyrings/tailscale-archive-keyring.gpg >/dev/null
-      curl -fsSL https://pkgs.tailscale.com/stable/debian/bullseye.tailscale-keyring.list | sudo tee /etc/apt/sources.list.d/tailscale.list
-      sudo apt-get update
-      sudo apt-get install docker.io
-      sudo apt-get install tailscale
   - name: dotfiles
     command: |
       if [ ! -d "~/.dotfiles" ]; then
@@ -21,6 +15,9 @@ tasks:
     command: |
       sudo ssh-keygen -A && sudo /usr/sbin/sshd
       curl https://github.com/gbraad.keys | tee -a ~/.ssh/authorized_keys
+  - name: tailscale
+    command: |
+      sudo /etc/init.d/tailscaled start
 
 ports:
   - port: 22
