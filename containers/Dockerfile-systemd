@@ -1,0 +1,11 @@
+FROM ghcr.io/gbraad-devenv/debian/dotfiles:bullseye
+
+USER root
+
+RUN apt-get update \
+    && apt-get install -y \
+        systemd \
+    && rm -rf /var/lib/apt/lists/*
+
+ENTRYPOINT ["/sbin/init"]
+CMD ["/sbin/init"]
