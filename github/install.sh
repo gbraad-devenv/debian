@@ -8,4 +8,4 @@ git init /workspaces/debian
 
 cd ~
 
-exit 0
+sudo --preserve-env=TAILSCALE_AUTHKEY /etc/init.d/tailscaled start
