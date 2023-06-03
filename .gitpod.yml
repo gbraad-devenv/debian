@@ -30,3 +30,4 @@ ports:
 vscode:
   extensions:
     - ms-vscode.Theme-TomorrowKit
+    - tailscale.vscode-tailscale
