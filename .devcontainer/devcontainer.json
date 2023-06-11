@@ -1,7 +1,7 @@
 {
     "name": "Debian developer environment",
     //"dockerFile": "Dockerfile",
-    "image": "ghcr.io/gbraad-devenv/debian/base:bullseye",
+    "image": "ghcr.io/gbraad-devenv/debian/base:bookworm",
     "context": "..",
     "runArgs": [ "--cap-add=NET_ADMIN", "--cap-add=NET_RAW", "--device=/dev/net/tun" ],
     "postStartCommand": "github/install.sh",

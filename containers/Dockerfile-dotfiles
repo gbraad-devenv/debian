@@ -1,4 +1,4 @@
-FROM ghcr.io/gbraad-devenv/debian/base:bullseye
+FROM ghcr.io/gbraad-devenv/debian/base:bookworm
 
 RUN git clone https://github.com/gbraad/dotfiles ~/.dotfiles \
     && ~/.dotfiles/install.sh

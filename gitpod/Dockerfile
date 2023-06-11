@@ -1,4 +1,4 @@
-FROM --platform=linux/amd64 ghcr.io/gbraad-devenv/debian/base:bullseye
+FROM --platform=linux/amd64 ghcr.io/gbraad-devenv/debian/base:bookworm
 
 USER root
 

@@ -1,4 +1,4 @@
-FROM ghcr.io/gbraad-devenv/debian/dotfiles:bullseye
+FROM ghcr.io/gbraad-devenv/debian/dotfiles:bookworm
 
 USER root
 

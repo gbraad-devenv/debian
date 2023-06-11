@@ -20,13 +20,13 @@ Usage
 ### Podman
 
 ```bash
-$ podman run -it ghcr.io/gbraad-devenv/debian/dotfiles:bullseye /bin/zsh 
+$ podman run -it ghcr.io/gbraad-devenv/debian/dotfiles:bookworm /bin/zsh 
 ```
 
 or with [Tailscale](https://tailscale.com) enabled:
 
 ```bash
-$ podman run -it --cap-add=NET_ADMIN --cap-add=NET_RAW --device=/dev/net/tun ghcr.io/gbraad-devenv/debian/dotfiles:bullseye /bin/zsh
+$ podman run -it --cap-add=NET_ADMIN --cap-add=NET_RAW --device=/dev/net/tun ghcr.io/gbraad-devenv/debian/dotfiles:bookworm /bin/zsh
 ```
 
 Authors
