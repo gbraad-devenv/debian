@@ -1,4 +1,4 @@
-name: tailscale-ssh
+name: tailscale-code-tunnel
 on:
   workflow_dispatch:
 
@@ -20,12 +20,16 @@ jobs:
           done
         env:
           TAILSCALE_AUTHKEY: ${{ secrets.TAILSCALE_AUTHKEY}}
+      - name: Start `code tunnel` as `gbraad`
+        run: |
+          podman exec code su - gbraad -c "code tunnel user login --provider github"
+          podman exec code systemctl enable --now code-tunnel@gbraad
       - name: Hang around
         run: |
-          until podman exec code systemctl is-active --quiet tailscaled
+          until podman exec code systemctl is-active --quiet code-tunnel@gbraad
           do
                sleep 1
           done
-          IP=`podman exec code tailscale ip -4`
-          echo "Use the following command to connect \`tailscale ssh gbraad@${IP}\`"
+          echo "Open in a browser: https://vscode.dev/tunnel/code-${HOSTNAME}"
+          echo "or connect to tunnel: code-${HOSTNAME} using VS Code"
           sleep infinity

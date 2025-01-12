@@ -1,4 +1,4 @@
-name: tailscale-ssh
+name: tailscale-code
 on:
   workflow_dispatch:
 
@@ -20,12 +20,15 @@ jobs:
           done
         env:
           TAILSCALE_AUTHKEY: ${{ secrets.TAILSCALE_AUTHKEY}}
+      - name: Start `code serve-web` as `gbraad`
+        run: |
+          podman exec code systemctl enable --now code-serveweb@gbraad
       - name: Hang around
         run: |
-          until podman exec code systemctl is-active --quiet tailscaled
+          until podman exec code systemctl is-active --quiet code-serveweb@gbraad
           do
                sleep 1
           done
           IP=`podman exec code tailscale ip -4`
-          echo "Use the following command to connect \`tailscale ssh gbraad@${IP}\`"
+          echo "Open in your web browser: http://${IP}:8000"
           sleep infinity

@@ -9,6 +9,11 @@ USER root
 
 RUN apt-get update \
     && apt-get install -y \
+        systemd \
+    && rm -rf /var/lib/apt/lists/*
+
+RUN apt-get update \
+    && apt-get install -y \
         git \
         sudo \
         openssh-client \
@@ -31,10 +36,10 @@ RUN curl -fsSL https://pkgs.tailscale.com/stable/debian/bookworm.noarmor.gpg | s
     && sudo apt-get update \
     && sudo apt-get install -y \
         tailscale \
-    && rm -rf /var/lib/apt/lists/*
+    && rm -rf /var/lib/apt/lists/* \
+    && mkdir -p /var/run/tailscale /var/cache/tailscale /var/lib/tailscale
 
-COPY scripts/tailscaled /etc/init.d/tailscaled
-RUN mkdir -p /var/run/tailscale /var/cache/tailscale /var/lib/tailscale
+COPY assets/tailscaled /etc/init.d/tailscaled
 
 RUN sudo mkdir -p -m 755 /etc/apt/keyrings \
     && out=$(mktemp) && wget -nv -O$out https://cli.github.com/packages/githubcli-archive-keyring.gpg \
