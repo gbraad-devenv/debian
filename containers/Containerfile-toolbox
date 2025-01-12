@@ -1,4 +1,8 @@
-FROM ghcr.io/gbraad-devenv/debian/base:bookworm
+ARG BASE_VERSION="bookworm"
+
+FROM ghcr.io/gbraad-devenv/debian/base:${BASE_VERSION}
+
+LABEL org.opencontainers.image.source = "https://github.com/gbraad-devenv/debian"
 
 USER root
 

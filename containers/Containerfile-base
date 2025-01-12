@@ -1,4 +1,9 @@
-FROM debian:bookworm
+ARG BASE_IMAGE="debian"
+ARG BASE_VERSION="bookworm"
+
+FROM ${BASE_IMAGE}:${BASE_VERSION} AS base
+
+LABEL org.opencontainers.image.source = "https://github.com/gbraad-devenv/debian"
 
 USER root
 
@@ -15,9 +20,11 @@ RUN apt-get update \
         tmux \
         powerline \
         zssh \
+        wget \
     && rm -rf /var/lib/apt/lists/*
 
-RUN curl -sSL https://raw.githubusercontent.com/gbraad/dotfiles/master/install.sh | sh
+RUN git clone https://github.com/gbraad/dotfiles ~/.dotfiles \
+    && ~/.dotfiles/install.sh
 
 RUN curl -fsSL https://pkgs.tailscale.com/stable/debian/bookworm.noarmor.gpg | sudo tee /usr/share/keyrings/tailscale-archive-keyring.gpg >/dev/null \
     && curl -fsSL https://pkgs.tailscale.com/stable/debian/bookworm.tailscale-keyring.list | sudo tee /etc/apt/sources.list.d/tailscale.list \
@@ -29,14 +36,15 @@ RUN curl -fsSL https://pkgs.tailscale.com/stable/debian/bookworm.noarmor.gpg | s
 COPY scripts/tailscaled /etc/init.d/tailscaled
 RUN mkdir -p /var/run/tailscale /var/cache/tailscale /var/lib/tailscale
 
-RUN curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg | sudo dd of=/usr/share/keyrings/githubcli-archive-keyring.gpg \
-    && sudo chmod go+r /usr/share/keyrings/githubcli-archive-keyring.gpg \
-    && echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main" | sudo tee /etc/apt/sources.list.d/github-cli.list > /dev/null \
+RUN sudo mkdir -p -m 755 /etc/apt/keyrings \
+    && out=$(mktemp) && wget -nv -O$out https://cli.github.com/packages/githubcli-archive-keyring.gpg \
+    && cat $out | sudo tee /etc/apt/keyrings/githubcli-archive-keyring.gpg > /dev/null \
+    && sudo chmod go+r /etc/apt/keyrings/githubcli-archive-keyring.gpg \
+    && echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main" | sudo tee /etc/apt/sources.list.d/github-cli.list > /dev/null \
     && sudo apt update \
     && sudo apt install -y \
         gh \
     && rm -rf /var/lib/apt/lists/*
-
 
 # Add user with the expected ID (automated setup does not work atm)
 RUN useradd -l -u 1000 -G sudo -md /home/gbraad -s /usr/bin/zsh -p gbraad gbraad \
