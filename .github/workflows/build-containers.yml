@@ -18,15 +18,30 @@ jobs:
     steps:
       - name: Check out repository code
         uses: actions/checkout@v4
-      - name: Run podman build - base
-        run: podman build -t ghcr.io/gbraad-devenv/debian/base:bookworm -f containers/Containerfile-base .
+      - name: Run podman build - rebase
+        run: |
+          podman build -t ghcr.io/gbraad-devenv/debian/rebase:bookworm \
+            --build-arg=BASE_IMAGE="ghcr.io/gbraad-dotfiles/debian" \
+            --build-arg=BASE_VERSION="bookworm" \
+            -f containers/Containerfile-rebase .
       - name: Run podman build - dotfiles
-        run: podman build -t ghcr.io/gbraad-devenv/debian/dotfiles:bookworm -f containers/Containerfile-dotfiles .
+        run: |
+          podman build -t ghcr.io/gbraad-devenv/debian/dotfiles:bookworm \
+            -f containers/Containerfile-dotfiles .
       - name: Run podman build - systemd
-        run: podman build -t ghcr.io/gbraad-devenv/debian/systemd:bookworm -f containers/Containerfile-systemd .
-      - name: Push image to ghcr.io - base
-        run: podman push --creds=${{ github.actor }}:${{ secrets.GITHUB_TOKEN }} ghcr.io/gbraad-devenv/debian/base:bookworm
+        run: |
+          podman build -t ghcr.io/gbraad-devenv/debian/systemd:bookworm \
+            -f containers/Containerfile-systemd .
+      - name: Login to ghcr.io
+        run: |
+          podman login ghcr.io -u ${{ github.actor }} \
+            -p ${{ secrets.GITHUB_TOKEN }}
+      - name: Push image to ghcr.io - rebase
+        run: |
+          podman push ghcr.io/gbraad-devenv/debian/rebase:bookworm
       - name: Push image to ghcr.io - dotfiles
-        run: podman push --creds=${{ github.actor }}:${{ secrets.GITHUB_TOKEN }} ghcr.io/gbraad-devenv/debian/dotfiles:bookworm
+        run: |
+          podman push ghcr.io/gbraad-devenv/debian/dotfiles:bookworm
       - name: Push image to ghcr.io - systemd
-        run: podman push --creds=${{ github.actor }}:${{ secrets.GITHUB_TOKEN }} ghcr.io/gbraad-devenv/debian/systemd:bookworm
+        run: |
+          podman push ghcr.io/gbraad-devenv/debian/systemd:bookworm

@@ -19,6 +19,10 @@ jobs:
       - name: Check out repository code
         uses: actions/checkout@v4
       - name: Run podman build - code-cli
-        run: podman build -t ghcr.io/gbraad-devenv/debian/code-cli:bookworm -f containers/Containerfile-code-cli .
+        run: |
+          podman build -t ghcr.io/gbraad-devenv/debian/code-cli:bookworm \
+            -f containers/Containerfile-code-cli .
       - name: Push image to ghcr.io - code-cli
-        run: podman push --creds=${{ github.actor }}:${{ secrets.GITHUB_TOKEN }} ghcr.io/gbraad-devenv/debian/code-cli:bookworm
+        run: |
+          podman push --creds=${{ github.actor }}:${{ secrets.GITHUB_TOKEN }} \
+            ghcr.io/gbraad-devenv/debian/code-cli:bookworm

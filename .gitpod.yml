@@ -1,16 +1,15 @@
 image:
-  file: /gitpod/Dockerfile
+  file: /.gitpod/Dockerfile
 
 tasks:
   - init: >
-      ./gitpod/install.sh
+      ./.gitpod/install.sh
   - name: dotfiles
     command: |
       if [ ! -d "~/.dotfiles" ]; then
         cd /tmp
-        curl -sSL https://raw.githubusercontent.com/gbraad/dotfiles/master/install.sh -o /tmp/install.sh &&
-        rm -f ~/.zshrc &&
-        sh /tmp/install.sh
+        rm -f ~/.zshrc
+        curl -fsSL https://dotfiles.gbraad.nl/install.sh | sh
       fi
       mv ~/.bashrc-nochsh ~/.bashrc
   - name: sshd
